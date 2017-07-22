@@ -1,0 +1,225 @@
+//-------------------------------------
+//breadpoints
+//.page-wrap {
+//	 width: 75%;
+//
+//	 @include bp(#bpSmall) { width: 60%; }
+//	 @include bp(420px) { width: 60%; }
+//}
+//-------------------------------------
+@mixin bp($point, $direction : 'max') {
+	@media screen and (#{$direction}-width: $point) {
+		@content;
+	}
+}
+
+//-------------------------------------
+//breakpoint height
+//   @include bph(200) { ... }
+//-------------------------------------
+@mixin bph($point, $direction : 'max') {
+	@media screen and (#{$direction}-height: $point) {
+		@content;
+	}
+}
+
+//-------------------------------------
+//breakpoint custom
+//    @include bpc("(max-width:200px) and (min-height:200)") {...}
+//-------------------------------------
+@mixin bpc($code, $direction : 'max') {
+	@media screen and #{$code}  {
+		@content;
+	}
+}
+
+//-------------------------------------
+//clearfix
+//-------------------------------------
+@mixin clearfix {
+	&:before,
+	&:after {
+		content: "";
+		display: table;
+	}
+	&:after {
+		clear: both;
+	}
+}
+
+@function convert-angle($value, $unit) {
+	$convertable-units: deg grad turn rad;
+	$conversion-factors: 1 (10grad/9deg) (1turn/360deg) (3.1415926rad/180deg);
+	@if index($convertable-units, unit($value)) and index($convertable-units, $unit) {
+		@return $value / nth($conversion-factors, index($convertable-units, unit($value))) * nth($conversion-factors, index($convertable-units, $unit));
+	}
+	@warn "Cannot convert '#{unit($value)}' to '#{$unit}'.";
+}
+
+@function is-direction($value) {
+	$is-direction: index((to top, to top right, to right top, to right, to bottom right, to right bottom, to bottom, to bottom left, to left bottom, to left, to left top, to top left), $value);
+	$is-angle: type-of($value) == 'number' and index('deg' 'grad' 'turn' 'rad', unit($value));
+	@return $is-direction or $is-angle;
+}
+
+@function legacy-direction($value) {
+	@if is-direction($value) == false {
+		@warn "Cannot convert '#{$value}' to legacy syntax because it doesn't seem to be an angle or a direction";
+	}
+
+	$conversion-map: (
+			to top : bottom,
+			to top right : bottom left,
+			to right top : left bottom,
+			to right : left,
+			to bottom right : top left,
+			to right bottom : left top,
+			to bottom : top,
+			to bottom left : top right,
+			to left bottom : right top,
+			to left : right,
+			to left top : right bottom,
+			to top left : bottom right
+	);
+
+	@if map-has-key($conversion-map, $value) {
+		@return map-get($conversion-map, $value);
+	}
+
+	@return 90deg - convert-angle($value, 'deg');
+}
+
+//-------------------------------------
+// linear gradient
+// Tests
+// .test-1 {
+//    @include linear-gradient(#31B7D7, #EDAC7D);
+// }
+//
+// .test-2 {
+//    @include linear-gradient(to right, #E47D7D 0%, #C195D3 50%, #4FB4E8 100%);
+// }
+//
+// .test-3 {
+//    @include linear-gradient(42deg, #B58234 0%, #D2B545 50%, #D7C04D 50.01%, #FFFFFF 100%);
+// }
+//-------------------------------------
+@mixin linear-gradient($direction, $color-stops...) {
+	@if is-direction($direction) == false {
+		$color-stops: ($direction, $color-stops);
+		$direction: 180deg;
+	}
+
+	background: nth(nth($color-stops, 1), 1);
+	background: -webkit-linear-gradient(legacy-direction($direction), $color-stops);
+	background: linear-gradient($direction, $color-stops);
+}
+
+//-------------------------------------
+// ir
+//-------------------------------------
+@mixin ir() {
+	font: 0/0 a !important;
+	text-shadow: none !important;
+	color: transparent !important;
+	border: 0 !important;
+	background-color: transparent !important;
+	display: block;
+	background-repeat: no-repeat;
+
+	br { display: none; }
+}
+
+//-------------------------------------
+// responsive images in bg
+// parent must have width: $image-width
+//-------------------------------------
+@mixin responsive-bg-image($image-width, $image-height) {
+	background-size: 100%;
+	background-repeat: no-repeat;
+	max-width: $image-width;
+	height: 0;
+	padding-bottom: percentage($image-height / $image-width);
+	display: block;
+}
+
+//-------------------------------------
+// responsive image as :before of element
+// this version not require parent element
+//-------------------------------------
+@mixin responsive-bg-image-before($image-width, $image-height, $imageUrl) {
+	max-width: $image-width;
+
+	&:before {
+		background: url($imageUrl);
+		background-size: 100%;
+		background-repeat: no-repeat;
+		padding-bottom: percentage($image-height / $image-width);
+		width: 100%;
+		content: '';
+		display: block;
+	}
+}
+
+//-------------------------------------
+//tworzy maly rozek jak w tooltipach.
+//   size - wielkosc strzalki
+//   color - kolor strzalki
+//   side - z której strony strzałka (top, left, right, bottom)
+//   position - 99px - pozycja strzalki na danej stronie
+//   $rear - czy liczyc pozycje od lewej czy od prawej (od gory czy od dolu)
+//   tooltipArrow(10px, #fff, 'top', 99px, 1);
+//-------------------------------------
+@mixin tooltip-arrow($size : 10px, $color : #FFF, $side : top, $position : 50%, $rear : 0) {
+	position: relative;
+
+	&:before {
+		content: '';
+		width: 0;
+		height: 0;
+		border: $size solid transparent;
+		position: absolute;
+
+		@if ($side==top) {
+			@if ($rear==0) {
+				left: $position;
+				margin-left: -$size;
+			} @else {
+				right: $position;
+				margin-right: -$size;
+			}
+			top: -$size*2;
+			border-bottom-color: $color;
+		} @else if ($side==bottom) {
+			@if ($rear==0) {
+				left: $position;
+				margin-left: -$size;
+			} @else {
+				right: $position;
+				margin-right: -$size;
+			}
+			bottom: -$size*2;
+			border-top-color: $color;
+		} @else if ($side==left) {
+			@if ($rear==0) {
+				top: $position;
+				margin-top: -$size;
+			} @else {
+				bottom: $position;
+				margin-bottom: -$size;
+			}
+			left: -$size*2;
+			border-right-color: $color;
+		} @else if ($side==right) {
+			@if ($rear==0) {
+				top: $position;
+				margin-top: -$size;
+			} @else {
+				bottom: $position;
+				margin-bottom: -$size;
+			}
+			right: -$size*2;
+			border-left-color: $color;
+		}
+	}
+}

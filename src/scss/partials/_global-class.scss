@@ -1,0 +1,76 @@
+/* -------------------------------------------------------------------------------- */
+/* glabal class */
+/* -------------------------------------------------------------------------------- */
+.page-center {
+	max-width: $maxLayoutWidth;
+	width: 94%;
+	margin: 0 auto;
+}
+
+.align-left {
+	text-align: left;
+}
+
+.align-right {
+	text-align: right;
+}
+
+.align-center {
+	text-align: center;
+}
+
+.pull-left {
+	float: left;
+}
+
+.pull-right {
+	float: right;
+}
+
+/* -------------------------------------------------------------------------------- */
+/* visible class */
+/* -------------------------------------------------------------------------------- */
+.hidden {
+	display: none !important;
+	visibility: hidden;
+}
+
+.visuallyhidden {
+
+
+	border: 0;
+	clip: rect(0 0 0 0);
+	height: 1px;
+	margin: -1px;
+	overflow: hidden;
+	padding: 0;
+	position: absolute;
+	width: 1px;
+    white-space: nowrap;
+
+	.focusable:active,
+	.focusable:focus {
+		clip: auto;
+		height: auto;
+		margin: 0;
+		overflow: visible;
+		position: static;
+		width: auto;
+	}
+}
+
+/* -------------------------------------------------------------------------------- */
+/* clearfix */
+/* -------------------------------------------------------------------------------- */
+.clearfix {
+	zoom: 1;
+
+	&:before,
+	&:after {
+		content: "";
+		display: table;
+	}
+	&:after {
+		clear: both;
+	}
+}

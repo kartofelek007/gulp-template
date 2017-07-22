@@ -1,0 +1,25 @@
+//-------------------------------------
+//colors and variables
+//-------------------------------------
+$color1: #FFF;
+$maxLayoutWidth: 1140px;
+$fontFamily: sans-serif;
+
+//-------------------------------------
+//breakpoints
+//-------------------------------------
+$bpSmall: 30em; //480px
+$bpMedium: 40.063em; //641px
+$bpLarge: 64.063em; //1025px
+$bpXLarge: 90.063em; //1441px
+$bpXXLarge: 120em; //1921px
+
+//nazwy breakpointów dla grida, do kazdego breakpointa podana jest klasa grida.
+//gridów nie musi byc tyle, moze byc ile chcesz.
+$gridBreakpointsNames: (
+				($bpSmall, 'col-sm'),
+				($bpMedium, 'col-md'),
+				($bpLarge, 'col-lg'),
+				($bpXLarge, 'col-xlg'),
+				($bpXXLarge, 'col-xxlg')
+);

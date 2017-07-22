@@ -1,0 +1,60 @@
+/* ---------------------------------------------------------- */
+/* grid */
+/* ---------------------------------------------------------- */
+@import "grid-4";
+
+$grid-gutter: 30px;
+$grid-wrap-class: "grid";
+$grid-col-class: "col";
+
+//-------------------------------------------------------------
+//generate grid
+//-------------------------------------------------------------
+//szerokosci kolumn
+@include grids-init($grid-col-class);
+
+//poczatkowe klasy widocznosci
+@each $item in $gridBreakpointsNames {
+	$bp: nth($item, 1);
+	$namespace: nth($item, 2);
+	.#{$namespace}-only-visible { display: none !important }
+	.#{$namespace}-visible { display: none !important }
+}
+
+//breakpointy
+@each $item in $gridBreakpointsNames {
+	$bp: nth($item, 1);
+	$bpNamespace: nth($item, 2);
+
+	@media only screen and (min-width: $bp) {
+
+		//klasy widocznosci
+		.#{$bpNamespace}-hidden { display: none !important }
+		.#{$bpNamespace}-visible { display: inherit !important }
+
+		//klasy ukrywajace
+		@each $item2 in $gridBreakpointsNames {
+			$tempNamespace: nth($item2, 2);
+
+			@if ($tempNamespace == $bpNamespace) {
+				.#{$tempNamespace}-only-hidden { display: none !important; }
+			} @else {
+				.#{$tempNamespace}-only-hidden { display: inherit !important; }
+			}
+		}
+
+		//klasy pokazujace
+		@each $item2 in $gridBreakpointsNames {
+			$tempNamespace: nth($item2, 2);
+
+			@if ($tempNamespace == $bpNamespace) {
+				.#{$tempNamespace}-only-visible { display: inherit !important; }
+			} @else {
+				.#{$tempNamespace}-only-visible { display: none !important; }
+			}
+		}
+
+		//szerokosci kolumn
+		@include grid-setup(#{$bpNamespace});
+	}
+}
