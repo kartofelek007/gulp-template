@@ -69,4 +69,4 @@ gulp.task('watch', function() {
 });
 
 
-gulp.task('default', ['browseSync', 'watch']);
+gulp.task('default', ['sass', 'js', 'browseSync', 'watch']);
