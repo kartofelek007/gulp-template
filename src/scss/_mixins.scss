@@ -1,4 +1,13 @@
 //-------------------------------------
+// convert px to rem
+// padding: rem(10px) rem(20px);
+//-------------------------------------
+@function rem($size) {
+	$remSize: $size / 16px;
+	@return #{$remSize}rem;
+}
+
+//-------------------------------------
 //breadpoints
 //.page-wrap {
 //	 width: 75%;
