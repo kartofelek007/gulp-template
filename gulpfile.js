@@ -1,16 +1,18 @@
-var gulp            = require('gulp');
-var browserSync     = require('browser-sync').create();
-var sass            = require('gulp-sass'); //sass
-var watch           = require('gulp-watch'); //watch
-var autoprefixer    = require('gulp-autoprefixer'); //auto prefixy
-var sourcemaps      = require('gulp-sourcemaps'); //sourcemapy
-var plumber         = require('gulp-plumber'); //zapobiera przerywaniu taskow
-var concat          = require('gulp-concat'); //laczenie plikow js
-var uglify          = require('gulp-uglify'); //minimalizacja js
-var rename          = require('gulp-rename'); //zmiana nazwy wynikowych plikow
+const gulp            = require('gulp');
+const browserSync     = require('browser-sync').create();
+const sass            = require('gulp-sass'); //sass
+const watch           = require('gulp-watch'); //watch
+const autoprefixer    = require('gulp-autoprefixer'); //auto prefixy
+const sourcemaps      = require('gulp-sourcemaps'); //sourcemapy
+const plumber         = require('gulp-plumber'); //zapobiera przerywaniu taskow
+const concat          = require('gulp-concat'); //laczenie plikow js
+const uglify          = require('gulp-uglify'); //minimalizacja js
+const rename          = require('gulp-rename'); //zmiana nazwy wynikowych plikow
+const webpack         = require('webpack');
 
 
-var handleError = function(err) {
+
+const handleError = function(err) {
     console.log(err.toString());
     this.emit('end');
 }
@@ -19,7 +21,8 @@ var handleError = function(err) {
 gulp.task('browseSync', function() {
     browserSync.init({
         server: "./",
-        notify: false
+        notify: false,
+        open: false //czy otwierac strone
     });    
 });
 
@@ -44,29 +47,20 @@ gulp.task('sass', function() {
 });
 
 
-gulp.task('js', function() {
-    return gulp.src('src/js/**/*.js')
-        .pipe(plumber({
-            errorHandler: handleError
-        }))
-        .pipe(sourcemaps.init())
-        .pipe(concat('scripts.js')) //laczenie plikow
-        .pipe(uglify()) //minimalizacja
-        .pipe(rename({ //zamieniam wynikowy plik na scripts.min.js
-            suffix: '.min',
-            basename: 'scripts'
-        }))
-        .pipe(sourcemaps.write('.'))
-        .pipe(gulp.dest('js'))
-        .pipe(browserSync.stream({match: '**/*.js'}));            
-});
+gulp.task('es6', function(cb) {
+    return webpack(require('./webpack.config.js'), function(err, stats) {
+        if (err) throw err;
+        console.log(stats.toString());
+        cb();
+    })
+})
 
 
 gulp.task('watch', function() {   
     gulp.watch('src/scss/**/*.scss', ['sass']);    
-    gulp.watch('src/js/**/*.js', ['js']);        
+    gulp.watch('src/js/**/*.js', ['es6']);        
     gulp.watch("*.html").on('change', browserSync.reload);
 });
 
 
-gulp.task('default', ['sass', 'js', 'browseSync', 'watch']);
+gulp.task('default', ['sass', 'es6', 'browseSync', 'watch']);
