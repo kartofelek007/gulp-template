@@ -2,7 +2,7 @@ const UglifyJSPlugin = require('uglifyjs-webpack-plugin')
 
 module.exports = {
     entry: "./src/js/app.js",
-    output: { filename: "./dist/js/scripts.min.js" },
+    output: { filename: "./dist/js/script.min.js" },
     watch: false, //mozna pominac
     devtool: "source-map",
     module: {
