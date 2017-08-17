@@ -20,7 +20,7 @@ const handleError = function(err) {
 
 gulp.task('browseSync', function() {
     browserSync.init({
-        server: "./",
+        server: "./dist",
         notify: false,
         open: false //czy otwierac strone
     });    
@@ -42,7 +42,7 @@ gulp.task('sass', function() {
             basename: 'style'
         }))
         .pipe(sourcemaps.write('.')) //po modyfikacjach na plikach zapisujemy w pamieci sourcemap
-        .pipe(gulp.dest("css")) //i calosc zapisujemy w dest
+        .pipe(gulp.dest("dist/css")) //i calosc zapisujemy w dest
         .pipe(browserSync.stream({match: '**/*.css'}));        
 });
 
@@ -59,7 +59,7 @@ gulp.task('es6', function(cb) {
 gulp.task('watch', function() {   
     gulp.watch('src/scss/**/*.scss', ['sass']);    
     gulp.watch('src/js/**/*.js', ['es6']);        
-    gulp.watch("*.html").on('change', browserSync.reload);
+    gulp.watch("dist/**/*.html").on('change', browserSync.reload);
 });
 
 
