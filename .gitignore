@@ -2,3 +2,7 @@ node_modules
 .idea
 .sass-sache
 Thumbs.db
+dist/js/scripts.min.js
+dist/js/scripts.min.js.map
+dist/css/style.min.css
+dist/css/style.min.css.map
