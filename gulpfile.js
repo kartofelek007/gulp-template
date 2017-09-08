@@ -9,11 +9,11 @@ const concat          = require('gulp-concat'); //laczenie plikow js
 const uglify          = require('gulp-uglify'); //minimalizacja js
 const rename          = require('gulp-rename'); //zmiana nazwy wynikowych plikow
 const webpack         = require('webpack');
-
+const gutil           = require('gulp-util');
 
 
 const handleError = function(err) {
-    console.log(err.toString());
+    console.log(gutil.colors.red(err.toString()));
     this.emit('end');
 }
 
@@ -22,7 +22,9 @@ gulp.task('browseSync', function() {
     browserSync.init({
         server: "./dist",
         notify: false,
-        open: false //czy otwierac strone
+        host: '192.168.0.24', //IPv4 Address Wirless LAN adapter WiFi from ipconfig
+        //port: 3000,
+        open: true //czy otwierac strone
     });    
 });
 
@@ -63,4 +65,7 @@ gulp.task('watch', function() {
 });
 
 
-gulp.task('default', ['sass', 'es6', 'browseSync', 'watch']);
+gulp.task('default', function() {
+    console.log(gutil.colors.yellow('======================= start ======================='));
+    gulp.start(['sass', 'es6', 'browseSync', 'watch']);
+});
