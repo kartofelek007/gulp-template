@@ -21,7 +21,7 @@ const handleError = function(err) {
 gulp.task('browseSync', function() {
     browserSync.init({
         server: "./dist",
-        notify: false,
+        notify: true,
         host: '192.168.0.24', //IPv4 Address Wirless LAN adapter WiFi from ipconfig
         //port: 3000,
         open: true //czy otwierac strone
@@ -38,7 +38,9 @@ gulp.task('sass', function() {
         .pipe(sass({
             outputStyle: 'expanded' //nested, expanded, compact, compressed
         }))
-        .pipe(autoprefixer({browsers: ["> 1%"]})) //autoprefixy https://github.com/postcss/autoprefixer#browsers
+        .pipe(autoprefixer({
+            browsers: ["> 1%"]
+        })) //autoprefixy https://github.com/postcss/autoprefixer#browsers
         .pipe(rename({ //zamieniam wynikowy plik na style.min.css
             suffix: '.min',
             basename: 'style'
@@ -54,6 +56,7 @@ gulp.task('es6', function(cb) {
         if (err) throw err;
         console.log(stats.toString());
         cb();
+        browserSync.reload();
     })
 })
 
