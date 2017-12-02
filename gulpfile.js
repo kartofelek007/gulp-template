@@ -36,7 +36,7 @@ gulp.task("sass", function() {
         }))
         .pipe(sourcemaps.init()) //inicjalizacja sourcemap przed zabawa na plikach
         .pipe(sass({
-            outputStyle: "expanded" //nested, expanded, compact, compressed
+            outputStyle: "compressed" //nested, expanded, compact, compressed
         }))
         .pipe(autoprefixer({
             browsers: ["> 1%"]
