@@ -10,9 +10,15 @@ const uglify          = require("gulp-uglify"); //minimalizacja js
 const rename          = require("gulp-rename"); //zmiana nazwy wynikowych plikow
 const webpack         = require("webpack");
 const gutil           = require("gulp-util");
-
+const notify          = require('gulp-notify');
 
 const handleError = function(err) {
+    notify.onError({
+        title: "Gulp error in " + err.plugin,
+        message:  err.message
+    })(err);
+
+    //console.dir(err); //wypisuje informacje o bledzie
     console.log(gutil.colors.red(err.toString()));
     this.emit("end");
 }
@@ -24,7 +30,7 @@ gulp.task("browseSync", function() {
         notify: true,
         host: "192.168.0.24", //IPv4 Address Wirless LAN adapter WiFi from ipconfig
         //port: 3000,
-        open: true //czy otwierac strone
+        open: true, //czy otwierac strone
     });
 });
 
@@ -51,7 +57,7 @@ gulp.task("sass", function() {
 });
 
 
-gulp.task("es6", function(cb) {
+gulp.task("es6", function(cb) { //https://github.com/webpack/docs/wiki/usage-with-gulp#normal-compilation
     return webpack(require("./webpack.config.js"), function(err, stats) {
         if (err) throw err;
         console.log(stats.toString());
