@@ -11,6 +11,8 @@ const rename          = require("gulp-rename"); //zmiana nazwy wynikowych plikow
 const webpack         = require("webpack");
 const gutil           = require("gulp-util");
 const notify          = require('gulp-notify');
+const wait            = require('gulp-wait');
+
 
 const handleError = function(err) {
     notify.onError({
@@ -37,6 +39,7 @@ gulp.task("browseSync", function() {
 
 gulp.task("sass", function() {
     return gulp.src("src/scss/style.scss")
+        .pipe(wait(500))
         .pipe(plumber({ //przeciwdziala bledom w pipe ktore np przerywaja watch
             errorHandler: handleError
         }))
