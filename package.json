@@ -11,22 +11,22 @@
   "license": "ISC",
   "dependencies": {},
   "devDependencies": {
-    "ansi-styles": "^3.2.0",
+    "ansi-styles": "^3.2.1",
     "babel-core": "^6.26.0",
-    "babel-loader": "^7.1.1",
+    "babel-loader": "^7.1.4",
     "babel-preset-env": "^1.6.1",
-    "browser-sync": "^2.18.12",
+    "browser-sync": "^2.23.6",
     "gulp": "^3.9.1",
-    "gulp-autoprefixer": "^4.0.0",
+    "gulp-autoprefixer": "^4.1.0",
     "gulp-notify": "^3.2.0",
-    "gulp-plumber": "^1.1.0",
+    "gulp-plumber": "^1.2.0",
     "gulp-rename": "^1.2.2",
-    "gulp-sass": "^3.1.0",
-    "gulp-sourcemaps": "^2.6.0",
+    "gulp-sass": "^3.2.1",
+    "gulp-sourcemaps": "^2.6.4",
     "gulp-util": "^3.0.8",
-    "gulp-watch": "^4.3.11",
     "gulp-wait": "0.0.2",
+    "gulp-watch": "^4.3.11",
     "uglifyjs-webpack-plugin": "^0.4.6",
-    "webpack": "^3.5.5"
+    "webpack": "^3.11.0"
   }
 }
