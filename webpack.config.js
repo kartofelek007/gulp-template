@@ -8,9 +8,10 @@ module.exports = {
     mode : "production",
     devtool: "source-map",
     module: {
-        loaders: [
+        rules: [
             {
-                test: /\.js$/,  exclude: /node_modules/,
+                test: /\.js$/,
+                exclude: /node_modules/,
                 loader: 'babel-loader',
                 query: {
                     "presets": [
