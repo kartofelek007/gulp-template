@@ -4,14 +4,15 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev" : "webpack --mode development",
-    "prod" : "webpack --mode production",
+    "dev": "webpack --mode development",
+    "prod": "webpack --mode production"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {},
   "devDependencies": {
+    "ansi-color": "^0.2.1",
     "ansi-styles": "^3.2.1",
     "babel-core": "^6.26.0",
     "babel-loader": "^7.1.4",

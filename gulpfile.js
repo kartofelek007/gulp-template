@@ -7,7 +7,7 @@ const sourcemaps      = require("gulp-sourcemaps"); //sourcemapy
 const plumber         = require("gulp-plumber"); //zapobiera przerywaniu taskow
 const rename          = require("gulp-rename"); //zmiana nazwy wynikowych plikow
 const webpack         = require("webpack");
-const gutil           = require("gulp-util");
+const colors          = require("ansi-colors");
 const notify          = require('gulp-notify');
 const wait            = require('gulp-wait');
 
@@ -19,7 +19,7 @@ const handleError = function(err) {
     })(err);
 
     //console.dir(err); //wypisuje informacje o bledzie
-    console.log(gutil.colors.red(err.toString()));
+    console.log(colors.red(err.toString()));
     this.emit("end");
 }
 
@@ -77,6 +77,6 @@ gulp.task("watch", function() {
 
 
 gulp.task("default", function() {
-    console.log(gutil.colors.yellow("======================= start ======================="));
+    console.log(colors.yellow("======================= start ======================="));
     gulp.start(["sass", "es6", "browseSync", "watch"]);
 });
