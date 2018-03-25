@@ -27,7 +27,7 @@
     "gulp-util": "^3.0.8",
     "gulp-wait": "0.0.2",
     "gulp-watch": "^4.3.11",
-    "uglifyjs-webpack-plugin": "^0.4.6",
-    "webpack": "^3.11.0"
+    "webpack": "^4.2.0",
+    "webpack-cli": "^2.0.12"
   }
 }
