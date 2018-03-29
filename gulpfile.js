@@ -8,19 +8,20 @@ const plumber         = require("gulp-plumber"); //zapobiera przerywaniu taskow
 const rename          = require("gulp-rename"); //zmiana nazwy wynikowych plikow
 const webpack         = require("webpack");
 const colors          = require("ansi-colors");
-const notify          = require('gulp-notify');
+const notifier        = require("node-notifier");
 const wait            = require('gulp-wait');
 
 
-const handleError = function(err) {
-    notify.onError({
-        title: "Gulp error in " + err.plugin,
-        message:  err.message
-    })(err);
+function showError(err) {
+    notifier.notify({
+        title: 'Error in sass',
+        message: err.message
+      });
 
-    //console.dir(err); //wypisuje informacje o bledzie
-    console.log(colors.red(err.toString()));
-    this.emit("end");
+    console.log(colors.red('==============================='));
+    console.log(colors.red(err.message));
+    console.log(colors.red('==============================='));
+    this.emit('end');
 }
 
 
