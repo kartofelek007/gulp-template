@@ -41,7 +41,7 @@ gulp.task("sass", function() {
     return gulp.src("src/scss/style.scss")
         .pipe(wait(500))
         .pipe(plumber({ //przeciwdziala bledom w pipe ktore np przerywaja watch
-            errorHandler: handleError
+            errorHandler: showError
         }))
         .pipe(sourcemaps.init()) //inicjalizacja sourcemap przed zabawa na plikach
         .pipe(sass({
