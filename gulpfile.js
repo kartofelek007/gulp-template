@@ -15,11 +15,11 @@ const wait            = require('gulp-wait');
 function showError(err) {
     notifier.notify({
         title: 'Error in sass',
-        message: err.message
+        message: err.messageFormatted
       });
 
     console.log(colors.red('==============================='));
-    console.log(colors.red(err.message));
+    console.log(colors.red(err.messageFormatted));
     console.log(colors.red('==============================='));
     this.emit('end');
 }

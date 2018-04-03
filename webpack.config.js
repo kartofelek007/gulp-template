@@ -4,25 +4,25 @@ module.exports = {
         path: `${__dirname}/dist/js`,
         filename: 'script.min.js'
     },
-    watch: false, //mozna pominac
-    mode : "production",
+    watch: true,
+    mode: "production",
     devtool: "source-map",
     module: {
         rules: [
             {
                 test: /\.js$/,
                 exclude: /node_modules/,
-                loader: 'babel-loader',
-                query: {
-                    "presets": [
-                        ["env", {
-                          "targets": {
-                            "browsers": ["> 1%"]
-                          }
-                        }]
-                      ]
+                use: {
+                    loader: 'babel-loader',
+                    options: {
+                        presets: [["env", {
+                            targets: {
+                                browsers: ['> 1%']
+                            }
+                        }]]
+                    }
                 }
             }
-        ],
+        ]
     }
 }
