@@ -10,6 +10,7 @@ const webpack         = require("webpack");
 const colors          = require("ansi-colors");
 const notifier        = require("node-notifier");
 const wait            = require('gulp-wait');
+const csso            = require('gulp-csso');
 
 
 function showError(err) {
@@ -50,6 +51,7 @@ gulp.task("sass", function() {
         .pipe(autoprefixer({
             browsers: ["> 1%"]
         })) //autoprefixy https://github.com/postcss/autoprefixer#browsers
+        .pipe(csso())
         .pipe(rename({ //zamieniam wynikowy plik na style.min.css
             suffix: ".min",
             basename: "style"
