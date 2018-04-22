@@ -49,8 +49,8 @@ gulp.task("sass", function() {
             outputStyle: "compressed" //nested, expanded, compact, compressed
         }))
         .pipe(autoprefixer({
-            browsers: ["> 1%"]
-        })) //autoprefixy https://github.com/postcss/autoprefixer#browsers
+            browsers: ["> 5%"]
+        })) //autoprefixy https://github.com/browserslist/browserslist#queries
         .pipe(csso())
         .pipe(rename({ //zamieniam wynikowy plik na style.min.css
             suffix: ".min",
