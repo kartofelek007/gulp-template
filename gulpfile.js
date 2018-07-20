@@ -11,6 +11,7 @@ const colors          = require("ansi-colors");
 const notifier        = require("node-notifier");
 const wait            = require('gulp-wait');
 const csso            = require('gulp-csso');
+const watch = require('gulp-watch');
 
 
 function showError(err) {
