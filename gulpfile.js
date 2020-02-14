@@ -1,86 +1,108 @@
-const gulp            = require("gulp");
-const browserSync     = require("browser-sync").create();
-const sass            = require("gulp-sass"); //sass
-const watch           = require("gulp-watch"); //watch
-const autoprefixer    = require("gulp-autoprefixer"); //auto prefixy
-const sourcemaps      = require("gulp-sourcemaps"); //sourcemapy
-const plumber         = require("gulp-plumber"); //zapobiera przerywaniu taskow
-const rename          = require("gulp-rename"); //zmiana nazwy wynikowych plikow
-const webpack         = require("webpack");
-const colors          = require("ansi-colors");
-const notifier        = require("node-notifier");
-const wait            = require('gulp-wait');
-const csso            = require('gulp-csso');
-const watch           = require('gulp-watch');
+const gulp          = require("gulp");
+const sass          = require("gulp-sass");
+const sourcemaps    = require("gulp-sourcemaps");
+const autoprefixer  = require("gulp-autoprefixer");
+const c             = require("ansi-colors");
+const notifier      = require("node-notifier");
+const rename        = require("gulp-rename");
+const wait          = require("gulp-wait");
+const csso          = require("gulp-csso");
+const browserSync   = require("browser-sync").create();
+const webpack       = require("webpack");
+const include       = require('gulp-include');
+const fileinclude = require('gulp-file-include');
 
+const showError = function(err) {
+    //console.log(err.toString());
 
-function showError(err) {
     notifier.notify({
-        title: 'Error in sass',
+        title: "Error in sass",
         message: err.messageFormatted
-      });
-
-    console.log(colors.red('==============================='));
-    console.log(colors.red(err.messageFormatted));
-    console.log(colors.red('==============================='));
-    this.emit('end');
-}
-
-
-gulp.task("browseSync", function() {
-    browserSync.init({
-        server: "./dist",
-        notify: true,
-        host: "192.168.0.24", //IPv4 Address Wirless LAN adapter WiFi from ipconfig
-        //port: 3000,
-        open: true, //czy otwierac strone
-        //browser: "google chrome" //jaka przeglądarka ma być otwierana - zaleznie od systemu - https://stackoverflow.com/questions/24686585/gulp-browser-sync-open-chrome-only
     });
-});
 
+    console.log(c.red("==============================="));
+    console.log(c.red(err.messageFormatted));
+    console.log(c.red("==============================="));
+};
 
-gulp.task("sass", function() {
+const server = (cb) => {
+    browserSync.init({
+        server: {
+            baseDir: "./dist"
+        },
+        notify: false,
+        //host: "192.168.0.24",
+        //port: 3000,
+        open: true,
+        //browser: "google chrome"
+    });
+
+    cb();
+};
+
+const css = function() {
     return gulp.src("src/scss/style.scss")
         .pipe(wait(500))
-        .pipe(plumber({ //przeciwdziala bledom w pipe ktore np przerywaja watch
-            errorHandler: showError
-        }))
-        .pipe(sourcemaps.init()) //inicjalizacja sourcemap przed zabawa na plikach
-        .pipe(sass({
-            outputStyle: "compressed" //nested, expanded, compact, compressed
-        }))
-        .pipe(autoprefixer({
-            browsers: ["> 5%"]
-        })) //autoprefixy https://github.com/browserslist/browserslist#queries
-        .pipe(csso())
-        .pipe(rename({ //zamieniam wynikowy plik na style.min.css
+        .pipe(sourcemaps.init())
+        .pipe(
+            sass({
+                outputStyle : "expanded"
+            }).on("error", showError)
+        )
+        .pipe(autoprefixer())
+        .pipe(rename({
             suffix: ".min",
             basename: "style"
         }))
-        .pipe(sourcemaps.write(".")) //po modyfikacjach na plikach zapisujemy w pamieci sourcemap
-        .pipe(gulp.dest("dist/css")) //i calosc zapisujemy w dest
-        .pipe(browserSync.stream({match: "**/*.css"}));
-});
+        //.pipe(csso())
+        .pipe(sourcemaps.write("."))
+        .pipe(gulp.dest("dist/css"))
+        .pipe(browserSync.stream());
+};
 
-
-gulp.task("es6", function(cb) { //https://github.com/webpack/docs/wiki/usage-with-gulp#normal-compilation
+const js = function(cb) { //https://github.com/webpack/docs/wiki/usage-with-gulp#normal-compilation
     return webpack(require("./webpack.config.js"), function(err, stats) {
         if (err) throw err;
         console.log(stats.toString());
-        cb();
         browserSync.reload();
+        cb();
     })
-})
+};
 
+const html = function(cb) {
+    return gulp.src(['src/html/index.html'])
+        .pipe(fileinclude({
+            prefix: '@@',
+            basepath: '@file'
+        }))
+        .pipe(gulp.dest('dist'))
+};
 
-gulp.task("watch", function() {
-    gulp.watch("src/scss/**/*.scss", ["sass"]);
-    gulp.watch("src/js/**/*.js", ["es6"]);
-    gulp.watch("dist/**/*.html").on("change", browserSync.reload);
-});
+const htmlReload = function(cb) {
+    browserSync.reload();
+    cb();
+};
 
+const watch = function() {
+    gulp.watch("src/scss/**/*.scss", {usePolling : true}, gulp.series(css));
+    gulp.watch("src/js/**/*.js", {usePolling : true}, gulp.series(js));
+    gulp.watch("src/html/**/*.html", {usePolling : true}, gulp.series(html, htmlReload));
+};
 
-gulp.task("default", function() {
-    console.log(colors.yellow("======================= start ======================="));
-    gulp.start(["sass", "es6", "browseSync", "watch"]);
-});
+const startText = function(cb) {
+    console.log(c.yellow(`
+        ───▄▀▀▀▄▄▄▄▄▄▄▀▀▀▄───
+        ───█▒▒░░░░░░░░░▒▒█───
+        ────█░░█░░░░░█░░█────
+        ─▄▄──█░░░▀█▀░░░█──▄▄─
+        █░░█─▀▄░░░░░░░▄▀─█░░█
+    `));
+    console.log(c.blue('Start :)'));
+    cb();
+};
+
+exports.default = gulp.series(startText, css, html, server, watch);
+exports.css = css;
+exports.html = html;
+exports.watch = watch;
+exports.js = js;

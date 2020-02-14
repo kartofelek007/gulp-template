@@ -2,7 +2,13 @@
 /* print styles */
 /* ---------------------------------------------------------- */
 @media print {
-	* { background: transparent !important; color: black !important; text-shadow: none !important; filter: none !important; -ms-filter: none !important; }
+	* {
+		background: transparent !important;
+		color: black !important;
+		text-shadow: none !important;
+		filter: none !important;
+		-ms-filter: none !important;
+	}
 	a, a:visited { text-decoration: underline; }
 	a[href]:after { content: " (" attr(href) ")"; }
 	abbr[title]:after { content: " (" attr(title) ")"; }
