@@ -1,9 +1,10 @@
-import { obj } from './test';
+import {test, test2} from "./test";
 
-document.addEventListener('DOMContentLoaded', function() {
+console.log('test')
 
-    //tutaj skrypty
-    obj.print("To jest wiadomosc 23");
-    obj.print();   
+document.addEventListener("DOMContentLoaded", function() {
+
+    test();
+    test2();
 
 });

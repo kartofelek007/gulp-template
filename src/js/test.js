@@ -1,7 +1,9 @@
-let obj = {
-	print(msg = "Domyslna wiadomosc") {
-		console.log(msg)
-	}
+const test = function() {
+    console.log("test1")
 }
 
-export { obj }
+function test2() {
+    console.log("test2")
+}
+
+export { test, test2 }

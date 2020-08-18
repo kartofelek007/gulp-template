@@ -2,28 +2,15 @@ const gulp          = require("gulp");
 const sass          = require("gulp-sass");
 const sourcemaps    = require("gulp-sourcemaps");
 const autoprefixer  = require("gulp-autoprefixer");
-const c             = require("ansi-colors");
-const notifier      = require("node-notifier");
 const rename        = require("gulp-rename");
 const wait          = require("gulp-wait");
 const csso          = require("gulp-csso");
 const browserSync   = require("browser-sync").create();
 const webpack       = require("webpack");
-const include       = require('gulp-include');
-const fileinclude = require('gulp-file-include');
+const fileinclude   = require('gulp-file-include');
 
-const showError = function(err) {
-    //console.log(err.toString());
+sass.compiler = require('sass');
 
-    notifier.notify({
-        title: "Error in sass",
-        message: err.messageFormatted
-    });
-
-    console.log(c.red("==============================="));
-    console.log(c.red(err.messageFormatted));
-    console.log(c.red("==============================="));
-};
 
 const server = (cb) => {
     browserSync.init({
@@ -47,14 +34,14 @@ const css = function() {
         .pipe(
             sass({
                 outputStyle : "expanded"
-            }).on("error", showError)
+            }).on("error", sass.logError)
         )
         .pipe(autoprefixer())
         .pipe(rename({
             suffix: ".min",
             basename: "style"
         }))
-        //.pipe(csso())
+        .pipe(csso())
         .pipe(sourcemaps.write("."))
         .pipe(gulp.dest("dist/css"))
         .pipe(browserSync.stream());
@@ -70,7 +57,7 @@ const js = function(cb) { //https://github.com/webpack/docs/wiki/usage-with-gulp
 };
 
 const html = function(cb) {
-    return gulp.src(['src/html/index.html'])
+    return gulp.src('src/html/index.html')
         .pipe(fileinclude({
             prefix: '@@',
             basepath: '@file'
@@ -90,18 +77,18 @@ const watch = function() {
 };
 
 const startText = function(cb) {
-    console.log(c.yellow(`
+    console.log(`
         ───▄▀▀▀▄▄▄▄▄▄▄▀▀▀▄───
         ───█▒▒░░░░░░░░░▒▒█───
         ────█░░█░░░░░█░░█────
         ─▄▄──█░░░▀█▀░░░█──▄▄─
         █░░█─▀▄░░░░░░░▄▀─█░░█
-    `));
-    console.log(c.blue('Start :)'));
+    `);
+    console.log('Start :)');
     cb();
 };
 
-exports.default = gulp.series(startText, css, html, server, watch);
+exports.default = gulp.series(startText, css, html, js, server, watch);
 exports.css = css;
 exports.html = html;
 exports.watch = watch;
