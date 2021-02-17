@@ -3,11 +3,9 @@ const sass          = require("gulp-sass");
 const sourcemaps    = require("gulp-sourcemaps");
 const autoprefixer  = require("gulp-autoprefixer");
 const rename        = require("gulp-rename");
-const wait          = require("gulp-wait");
-const csso          = require("gulp-csso");
 const browserSync   = require("browser-sync").create();
-const webpack       = require("webpack");
 const fileinclude   = require('gulp-file-include');
+const gulpEsbuild           = require('gulp-esbuild')
 
 sass.compiler = require('sass');
 
@@ -29,7 +27,6 @@ const server = (cb) => {
 
 const css = function() {
     return gulp.src("src/scss/style.scss")
-        .pipe(wait(500))
         .pipe(sourcemaps.init())
         .pipe(
             sass({
@@ -41,19 +38,19 @@ const css = function() {
             suffix: ".min",
             basename: "style"
         }))
-        .pipe(csso())
         .pipe(sourcemaps.write("."))
         .pipe(gulp.dest("dist/css"))
         .pipe(browserSync.stream());
 };
 
-const js = function(cb) { //https://github.com/webpack/docs/wiki/usage-with-gulp#normal-compilation
-    return webpack(require("./webpack.config.js"), function(err, stats) {
-        if (err) throw err;
-        console.log(stats.toString());
-        browserSync.reload();
-        cb();
-    })
+const js = function(cb) {
+    return gulp.src('./src/js/app.js')
+        .pipe(gulpEsbuild({
+            outfile: 'bundle.min.js',
+            bundle: true
+        }))
+        .pipe(gulp.dest('./dist/js'))
+        .pipe(browserSync.stream());
 };
 
 const html = function(cb) {
